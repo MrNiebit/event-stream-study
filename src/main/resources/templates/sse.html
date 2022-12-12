@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Send Event</title>
+</head>
+<script>
+    // 需要判断浏览器支持不支持
+    var source = new EventSource("/test/sse");
+    source.onmessage = event => {
+        console.info(event.data);
+        if ('end' === event.data) {
+            source.close(); // stop retry
+        }
+        document.getElementById("content").innerText = event.data;
+    }
+    source.onopen = () => {
+        console.log('start sse ...')
+    }
+
+    // 10s后关闭sse
+    // setTimeout(() => {
+    //     console.log('closed sse !!!')
+    //     source.close();
+    // }, 10000)
+</script>
+<body>
+<div id="content"></div>
+</body>
+</html>
